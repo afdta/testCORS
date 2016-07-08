@@ -1,0 +1,120 @@
+#ai2016wrap{
+	position:relative;
+	margin:0px auto;
+	width:100%;
+	max-width:1400px;
+	background-color:#ffffff;
+}
+
+#ai2016wrap p, #ai2016wrap select, #ai2016wrap td, #ai2016wrap text{
+	font-family: franklin-gothic-urw,arial,helvetica,sans-serif;
+}
+
+#ai2016wrap select{
+	background-color:#ffffff;
+	padding:5px;
+	margin:2px 0px;
+	border: 1px solid #aaaaaa;
+	outline: 0px solid #aaaaaa;
+	font-size:1em;
+	width:100%;
+}
+#ai2016wrap select:focus{
+	border:1px solid #aaaaaa;
+}
+
+#ai2016chart, #ai2016map{width:100%; height:100%;}
+.ai2016datapoints{
+	display:table;
+	border-collapse:separate;
+	border-spacing:5px 0px;
+	width:100%;
+	position:relative;
+}
+.ai2016datapoints > div{
+	display:table-row;
+	table-layout:fixed;
+}
+.ai2016datapoints > div > p{
+	display:table-cell;
+	padding:10px 15px;
+	vertical-align:top;
+	width:25%;
+	text-align:left;
+	background-color:#ffffff;
+	border:1px solid #aaaaaa;
+	border-width:0px 1px 1px 1px;
+}
+.ai2016datapoints > div > div{
+	display:table-cell;
+	width:100%;
+	height:5px;
+	width:25%;
+	background-color:#ffffff;
+}
+.ai2016datapoints > div > div.dp-selected{
+	background-color:#0d73d6;
+	border-top:1px solid #0d73d6;
+}
+.ai2016datapoints > div.ai-datapoint > p{
+	font-size:2.5em;
+	font-weight:700;
+	vertical-align:middle;
+	color:#0d73d6;
+	border-width:0px 1px;
+	padding:0px 20px;
+}
+.ai2016datapoints > div.ai-footer > p, .ai2016datapoints .ai-footer{
+	font-style:italic;
+}
+.ai2016datapoints > div:first-child > p{
+	vertical-align:bottom;
+	font-weight:400;
+	border-width:1px 1px 0px 1px;
+}
+.ai2016datapoints > div:last-child > p{
+	vertical-align:bottom;
+	border-width:0px 1px 1px 1px;
+}
+
+#ai2016wrap svg{
+	width:100%;
+	height:100%;
+}
+
+#ai2016wrap svg .axis-group path{
+	fill: none;
+	stroke: #666666;
+	shape-rendering: crispEdges;
+}
+#ai2016wrap svg .axis-group line{
+	fill: none;
+	stroke: #666666;
+	shape-rendering: crispEdges;
+}
+#ai2016wrap svg .axis-group text{font-size:0.8em;}
+
+@media (min-width:0px){
+	.ai2016datapoints{border-collapse:collapse;}
+	.ai2016datapoints > div > p{
+		font-size:0.8em;
+	}
+	.ai2016datapoints > div.ai-datapoint > p{
+		font-size:1.2em;
+	}
+}
+@media (min-width:780px){
+	.ai2016datapoints{border-collapse:separate;}
+	.ai2016datapoints > div > p{
+		font-size:1em;
+	}
+	.ai2016datapoints > div.ai-datapoint > p{
+		font-size:2.5em;
+	}
+}
+
+#ai2016wrap .c-fix::after{
+	content:"";
+	display:table;
+	clear:both;
+}
