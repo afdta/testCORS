@@ -6,7 +6,7 @@
 	background-color:#ffffff;
 }
 
-#ai2016wrap p, #ai2016wrap select, #ai2016wrap td, #ai2016wrap text{
+#ai2016wrap p, #ai2016wrap select, #ai2016wrap td, #ai2016wrap th, #ai2016wrap text{
 	font-family: franklin-gothic-urw,arial,helvetica,sans-serif;
 }
 
@@ -30,6 +30,7 @@
 	border-spacing:5px 0px;
 	width:100%;
 	position:relative;
+	table-layout:fixed;
 }
 .ai2016datapoints > div{
 	display:table-row;
@@ -47,7 +48,6 @@
 }
 .ai2016datapoints > div > div{
 	display:table-cell;
-	width:100%;
 	height:5px;
 	width:25%;
 	background-color:#ffffff;
@@ -94,6 +94,16 @@
 }
 #ai2016wrap svg .axis-group text{font-size:0.8em;}
 
+
+#ai2016wrap .disable-highlight, #ai2016wrap .disable-highlight p{
+  -webkit-user-select: none;  
+  -moz-user-select: none; 
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#ai2016wrap .split-50 > div > div{padding:5px 15px;}
+
 @media (min-width:0px){
 	.ai2016datapoints{border-collapse:collapse;}
 	.ai2016datapoints > div > p{
@@ -102,6 +112,9 @@
 	.ai2016datapoints > div.ai-datapoint > p{
 		font-size:1.2em;
 	}
+
+	#ai2016wrap .float-right, #ai2016wrap .float-left{float:none;}
+	#ai2016wrap .split-50 > div{width:auto;margin:auto;}
 }
 @media (min-width:780px){
 	.ai2016datapoints{border-collapse:separate;}
@@ -111,10 +124,25 @@
 	.ai2016datapoints > div.ai-datapoint > p{
 		font-size:2.5em;
 	}
+
+	#ai2016wrap .float-right{float:right;}
+	#ai2016wrap .float-left{float:left;}
+
+	#ai2016wrap .split-50 > div{width:48%; margin:0px 2% 0px 0px;}
 }
 
 #ai2016wrap .c-fix::after{
 	content:"";
 	display:table;
 	clear:both;
+}
+
+#ai2016wrap .ai2016-graytext{
+	color:#666666;
+}
+
+#ai2016wrap .ai2016-bluetext{
+	fill:#0d73d6;
+	color:#0d73d6;
+	text-decoration:underline;
 }

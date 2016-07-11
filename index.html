@@ -16,24 +16,57 @@
 
 <div id="ai2016wrap">
 	<div class="c-fix">
-		<div id="ai2016select" style="float:left;margin:10px 5px 0px 5px;min-width:320px;color:#666666;"><p style="font-size:0.8em;">SELECT A METRO AREA</p></div>
-		<div id="ai2016catselect" style="float:left;margin:10px 0px 0px 5px;min-width:320px;color:#666666;"><p style="font-size:0.8em">FOCUS ON JOBS OR GDP</p></div>
+		<div id="ai2016select" class="float-right" style="margin:10px 5px 0px 5px;min-width:320px;color:#666666;"><p style="font-size:0.8em;">SELECT A METRO AREA</p></div>
 	</div>
-	<div id="ai2016title0" style="padding:5px;height:60px; margin:0px 0px 5px 10px;display:table;">
+	<div id="ai2016title0" style="padding:5px;height:60px; margin:0px 0px 0px 10px;display:table;">
 		<div style="display:table-row">
 			<p style="display:table-cell; vertical-align:bottom; font-size:1.5em; line-height:1em;"></p>
 		</div>
 	</div>
 
-	<p style="color:#666666;font-size:0.8em;margin:0px 15px 10px 15px;">CLICK ON AN INDICATOR BELOW TO VIEW IT ON THE CHART</p>
+	<div class="c-fix disable-highlight" style="margin:0px 15px 0px 15px">
+		<div style="font-size:0.8em;margin:5px 0px 10px 0px;" class="c-fix float-right">
+			<p class="ai2016-graytext" style="display:inline-block;color:#666666;">SELECT A METRIC: </p>
+			<p id="ai2016-jobs-button" class="ai2016-button ai2016-graytext" style="display:inline-block;cursor:pointer;font-weight:700;">JOBS</p>
+			<p class="ai2016-graytext" style="display:inline-block;color:#666666;"> or </p>
+			<p id="ai2016-gdp-button" class="ai2016-button ai2016-graytext" style="display:inline-block;cursor:pointer;font-weight:700;">OUTPUT</p>
+		</div>
+		<div style="font-size:0.8em;margin:5px 0px 10px 0px;" class="c-fix float-left">	
+			<p style="color:#666666;float:left">CLICK ON AN INDICATOR BELOW TO VIEW IT ON THE CHART</p>
+		</div>
+	</div>
+	
+	<div>
+		<div id="ai2016at-a-glance" class="ai2016datapoints"></div>
+		<div id="ai2016indicator-bar" class="ai2016datapoints"></div>
+	</div>
 
-	<div id="ai2016at-a-glance" class="ai2016datapoints"></div>
-	<div id="ai2016indicator-bar" class="ai2016datapoints"></div>
-
-	<p id="ai2016chart-title" style="margin:40px 0px 5px 10px;padding:5px;font-size:1.25em;"></p>
+	<p id="ai2016chart-title" style="margin:40px 0px 0px 10px;padding:5px;font-size:1.25em;"></p>
+	<p style="margin:3px 15px;">100 largest U.S. metropolitan areas</p>
 	<div id="ai2016chart"></div>
-	<div id="ai2016map"></div>
+
+	<p id="ai2016title1" style="font-size:1.5em; line-height:1em; margin:60px 15px 10px 15px;"></p>
+	<div id="ai2016tables" class="c-fix">
+		<div style="padding:5px 15px;">
+			<p style="border-bottom:1px solid #aaaaaa;padding:3px;margin-bottom:15px;">The five largest detailed advanced industries by number of jobs, 2015</p>
+			<table id="ai2106-ind0" style="width:100%;">
+				<thead>
+					<tr>
+						<th>Industry</th>
+						<th>Number of jobs, 2015</th>
+						<th>Share of all advanced industries jobs, 2015</th>
+						<th>Growth, 2013–2015</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
+
+<div style="width:100%;height:1000px"></div>
 
 </body>
 
