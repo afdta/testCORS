@@ -13,7 +13,7 @@
 	data.loaded = false;
 	data.allRows = [];
 	data.cut = [];
-	data.cat = "emp";
+	data.cat = "emp"; //currently selected category/var
 	data.var = "gr1315";
 	data.vars = ["num15", "sh15", "gr1013", "gr1315"];
 	data.ranges = {emp:{}, gdp:{}};
@@ -36,9 +36,6 @@
 	dom.chart.xaxis = dom.chart.svg.append("g").classed("axis-group",true);
 	dom.chart.yaxis = dom.chart.svg.append("g").classed("axis-group",true);
 
-	dom.map = {};
-	dom.map.wrap = d3.select("#ai2016map");
-
 	dom.dp = {};
 	dom.dp.wrap = d3.select("#ai2016at-a-glance"); //selectable datapoints
 	dom.dp.indicator_table = d3.select("#ai2016indicator-bar"); //indicate which data point has been selected
@@ -53,7 +50,7 @@
 
 	//check support for svg
 	if(!document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")){
-		document.getElementById("ai2106wrap").innerHTML = '<p style="font-style:italic;text-align:center;margin:30px 0px 30px 0px;">This interactive feature requires a modern browser such as Chrome, Firefox, IE9+, or Safari.</p>';
+		document.getElementById("ai2016wrap").innerHTML = '<p style="font-style:italic;text-align:center;margin:30px 0px 30px 0px;">This interactive feature requires a modern browser such as Chrome, Firefox, IE9+, or Safari.</p>';
 		dom.svgsupport = false;
 		return null;
 	}
@@ -150,6 +147,7 @@
 		return row;
 	}
 
+	//pull in data and do some setup
 	d3.csv(scope.repo+"AI100Data.csv", parser, function(dat){
 		if(dat===null){
 			return null; //no-op if there's an error retrieving data
@@ -158,29 +156,32 @@
 
 		data.cut = data.allRows = dat.filter(function(d,i,a){return d.raw.TOP100==="1"});
 
+		//create a lookup for data by metro code
 		data.lookup = {};
 		for(var i=0; i<dat.length; i++){
 			data.lookup[dat[i].metro] = dat[i];
 		}
 
-		optData = data.cut.map(function(d,i){
-			return {val: d.metro, label: d.metname}
-		});
-		optData.sort(function(a,b){return a.label < b.label ? -1 : 1});
-		
-		data.metro = optData[0].val;
+		//set up select menu
+			optData = data.cut.map(function(d,i){
+				return {val: d.metro, label: d.metname}
+			});
+			optData.sort(function(a,b){return a.label < b.label ? -1 : 1});
+			
+			data.metro = optData[0].val;
 
-		for(var v=0; v<data.vars.length; v++){
-			data.ranges.emp[data.vars[v]] = d3.extent(data.cut, function(d,i){return d.emp[data.vars[v]]});
-			data.ranges.gdp[data.vars[v]] = d3.extent(data.cut, function(d,i){return d.gdp[data.vars[v]]});
-		}
-		data.ranges.emp.growth = d3.extent(data.ranges.emp.gr1013.concat(data.ranges.emp.gr1315));
-		data.ranges.gdp.growth = d3.extent(data.ranges.gdp.gr1013.concat(data.ranges.gdp.gr1315));
+			var options = dom.select.metro.selectAll("option").data(optData)
+			options.enter().append("option");
+			options.exit().remove();
+			options.attr("value",function(d,i){return d.val}).text(function(d,i){return d.label});
 
-		var options = dom.select.metro.selectAll("option").data(optData)
-		options.enter().append("option");
-		options.exit().remove();
-		options.attr("value",function(d,i){return d.val}).text(function(d,i){return d.label});
+			for(var v=0; v<data.vars.length; v++){
+				data.ranges.emp[data.vars[v]] = d3.extent(data.cut, function(d,i){return d.emp[data.vars[v]]});
+				data.ranges.gdp[data.vars[v]] = d3.extent(data.cut, function(d,i){return d.gdp[data.vars[v]]});
+			}
+			data.ranges.emp.growth = d3.extent(data.ranges.emp.gr1013.concat(data.ranges.emp.gr1315));
+			data.ranges.gdp.growth = d3.extent(data.ranges.gdp.gr1013.concat(data.ranges.gdp.gr1315));
+
 
 		drawChart();
 		setMetro(data.metro);
@@ -197,30 +198,6 @@
 			drawDataPoints();
 		});
 	});
-
-	//calculate the rank of data in the array data_array. accessor specifies how to extract the data value from each data element
-	function calcRank(data, data_array, accessor){
-
-		var d = accessor(data);
-		var reference = data_array.map(accessor);
-		reference.sort(function(a,b){return a-b});
-
-		try{
-			var i = reference.indexOf(d) + 1;
-			var rank = (i>0 && d!==null) ? i : "N/A";
-		}
-		catch(e){
-			if(!Array.prototype.indexOf){
-				var rank = "N/A";
-			}
-			else{
-				var rank = "N/A";
-			}
-		}
-		finally{
-			return rank;
-		}
-	}
 	
 	var xaxis = d3.svg.axis().orient("top").ticks(5);
 	var yaxis = d3.svg.axis().orient("left").ticks(5);
@@ -256,6 +233,7 @@
 										.sort(function(a,b){return accessor(a)-accessor(b)})
 										.map(function(d,i,a){return d.metro}); 
 
+			//get the index of metro in current_metro_order							
 			var indexof = function(metro){
 				if(!!Array.prototype.indexOf){
 					var I = current_metro_order.indexOf(metro);
@@ -293,6 +271,7 @@
 			var sel = data.selection; 
 			var cut = data.cut;
 
+			//get range (max/min) for selected variable
 			if(data.var in {gr1013:1, gr1315:1}){
 				var range = data.ranges[data.cat].growth;
 			}
@@ -301,6 +280,7 @@
 			}
 			if(range[0] > 0){range[0] = 0}
 
+			//build scales
 			var scale = d3.scale.linear().domain([range[0]*1.05, range[1]*1.05]).range([0, width]);
 			var ordscale = d3.scale.ordinal().domain(current_metro_order);
 			data.scale = scale;
@@ -329,7 +309,7 @@
 				
 				var ticks = scale.ticks(5);
 				xaxis.tickValues(ticks);
-				yaxis.tickValues(null);
+				yaxis.tickValues(null); //yaxis not needed in portrait
 
 				var gridlines = dom.chart.svg.anno.selectAll("line").data(ticks);
 				gridlines.enter().append("line");
@@ -443,7 +423,7 @@
 					return D < 0 ? "#dc2a2a" : "#0d73d6";
 				})
 				.transition().duration(1400).delay(0)
-				.attr({x1:0, x2:0, y1:425})
+				.attr({x1:0, x2:0})
 				.attr("y1", function(d,i){
 					var o = scale(0);
 					return o;
@@ -488,15 +468,6 @@
 					return v >= 0 ? "M0,"+y+" l0,5" : "M0,"+y+" l0,15";
 				});
 
-
-
-				dom.chart.svg.style({"width":"100%", "height":svg_height+"px"});
-				yaxis.scale(scale).tickFormat(scope.varfmt[data.var]);
-				dom.chart.yaxis.style("display","inline").transition().duration(1000).call(yaxis);
-				dom.chart.xaxis.style("display","none");
-
-				rects.attr({"width":step, "height":"400", "x":0-(step/2), "y":"25"});
-
 				texts
 				.transition().duration(1400).delay(0)
 				.attr("text-anchor", function(d,i){
@@ -529,6 +500,13 @@
 				.style("display", function(d,i){
 					return i===0 && d.metro===data.metro ? "inline" : "none";
 				});
+
+				dom.chart.svg.style({"width":"100%", "height":svg_height+"px"});
+				yaxis.scale(scale).tickFormat(scope.varfmt[data.var]);
+				dom.chart.yaxis.style("display","inline").transition().duration(1000).call(yaxis);
+				dom.chart.xaxis.style("display","none");
+
+				rects.attr({"width":step, "height":"400", "x":0-(step/2), "y":"25"});
 			}
 
 			function highlight(d,i){
@@ -566,7 +544,6 @@
 			d3.select("p#ai2016chart-title").text(titleText(data.var));
 		}
 		catch(e){
-			console.log(e);
 			dom.chart.svg.selectAll("g").remove();
 		}
 
@@ -683,7 +660,7 @@
 
 			cells.text(function(d,i){return d});
 
-
+			//set titles of two data point sections
 			var title0 = d3.select("#ai2016title0").select("p");
 			title0.html('<span style="font-weight:700">' + data.lookup[met].metname + '</span> at a glance');
 
@@ -692,11 +669,11 @@
 
 		}
 		catch(e){
-			console.log(e);
 			dom.dp.wrap.selectAll("div").remove(); //remove all data points
 		}
 	}
 
+	//assign value to select menu, assign global metro selection, draw data points, highlight the appropriate annotations on chart
 	function setMetro(metro){
 		dom.select.metro.node().value = metro;
 		data.metro = metro;
